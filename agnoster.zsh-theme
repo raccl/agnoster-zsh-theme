@@ -26,13 +26,28 @@
 
 typeset -aHg AGNOSTER_PROMPT_SEGMENTS=(
     prompt_status
-    prompt_context
     prompt_virtualenv
+    prompt_hostname
+    prompt_newline
     prompt_dir
+    prompt_newline
+    prompt_git_username
+    prompt_newline
     prompt_git
+    prompt_newline
     prompt_end
 )
+prompt_newline() {
+  if [[ -n $CURRENT_BG ]]; then
+    echo -n "%{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR
+%{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"
+  else
+    echo -n "%{%k%}"
+  fi
 
+  echo -n "%{%f%}"
+  CURRENT_BG=''
+}
 ### Segment drawing
 # A few utility functions to make it easy and re-usable to draw segmented prompts
 
@@ -80,12 +95,19 @@ prompt_end() {
 ### Prompt components
 # Each component will draw itself, and hide itself if no information needs to be shown
 
-# Context: user@hostname (who am I and where am I)
-prompt_context() {
+# Hostname: @hostname (where am I and who am I on git)
+prompt_hostname() {
   local user=`whoami`
-
   if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
-    prompt_segment $PRIMARY_FG default " %(!.%{%F{yellow}%}.)$user@%m "
+    prompt_segment "#a8f" $PRIMARY_FG " %(!.%{%F{yellow}%}.) @%m "
+  fi
+}
+
+# Hostname: @hostname (who am I on git) # ! Alwayts shown !
+prompt_git_username() {
+  local user=`git config user.name`
+  if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
+    prompt_segment "#8fa" $PRIMARY_FG " %(!.%{%F{yellow}%}.)$user@git "
   fi
 }
 
@@ -116,7 +138,7 @@ prompt_git() {
 
 # Dir: current working directory
 prompt_dir() {
-  prompt_segment blue $PRIMARY_FG ' %~ '
+  prompt_segment "#f8a" $PRIMARY_FG ' %~ '
 }
 
 # Status:
