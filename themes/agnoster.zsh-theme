@@ -27,6 +27,12 @@
 typeset -aHg AGNOSTER_PROMPT_SEGMENTS=(
     prompt_status
     prompt_virtualenv
+    prompt_operating_system
+    prompt_newline
+    prompt_machine_architect
+    prompt_newline
+    prompt_kernel_release
+    prompt_newline
     prompt_hostname
     prompt_newline
     prompt_username
@@ -102,6 +108,31 @@ prompt_hostname() {
   local user=`whoami`
   if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
     prompt_segment "#a8f" $PRIMARY_FG " %(!.%{%F{yellow}%}.) @%m "
+  fi
+}
+
+
+# Operating System : #$(uname -o) (on what OS)
+prompt_operating_system() {
+  local user=`whoami`
+  if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
+    prompt_segment "#f8b" $PRIMARY_FG " %(!.%{%F{yellow}%}.) # $(uname -o)"
+  fi
+}
+
+# Machine Architect : #$(uname -m) (machine hardware)
+prompt_machine_architect() {
+  local user=`whoami`
+  if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
+    prompt_segment "#fab" $PRIMARY_FG " %(!.%{%F{yellow}%}.) # $(uname -m)"
+  fi
+}
+
+# Kernel Release : #$(uname -r) (kernel release)
+prompt_kernel_release() {
+  local user=`whoami`
+  if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
+    prompt_segment "#afb" $PRIMARY_FG " %(!.%{%F{yellow}%}.) # $(uname -r)"
   fi
 }
 
