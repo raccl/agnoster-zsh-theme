@@ -11,4 +11,9 @@ sh -c "$(curl -LsSf https://raw.githubusercontent.com/raccl/agnoster-zsh-theme/m
 echo 'Update Theme agnoster'
 sh -c "$(curl -LsSf https://raw.githubusercontent.com/raccl/agnoster-zsh-theme/master/tools/themes/update/agnoster.sh)"
 
+# Change Shell to zsh
+echo 'Change Shell to zsh'
+sh -c "$(curl -LsSf https://raw.githubusercontent.com/raccl/agnoster-zsh-theme/master/tools/chsh.sh)"
+
+# Run zsh
 exec zsh -l
