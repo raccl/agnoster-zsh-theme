@@ -29,6 +29,8 @@ typeset -aHg AGNOSTER_PROMPT_SEGMENTS=(
     prompt_virtualenv
     prompt_hostname
     prompt_newline
+    prompt_username
+    prompt_newline
     prompt_dir
     prompt_newline
     prompt_git_username
@@ -103,7 +105,15 @@ prompt_hostname() {
   fi
 }
 
-# Hostname: @hostname (who am I on git) # ! Alwayts shown !
+# Username: @username (where am I and who am I on git)
+prompt_username() {
+  local user=`whoami`
+  if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
+    prompt_segment "#8af" $PRIMARY_FG " %(!.%{%F{yellow}%}.) @%n "
+  fi
+}
+
+# Git Username: git.user.name@git (who am I on git) # ! Alwayts shown !
 prompt_git_username() {
   local user=`git config user.name`
   if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
