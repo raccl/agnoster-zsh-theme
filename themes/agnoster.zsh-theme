@@ -31,6 +31,12 @@ typeset -aHg AGNOSTER_PROMPT_SEGMENTS=(
     prompt_newline
     prompt_machine_architect
     prompt_newline
+    prompt_microcode
+    prompt_newline
+    prompt_cpu_bugs
+    prompt_newline
+    prompt_cpu_base_clock
+    prompt_newline
     prompt_kernel_release
     prompt_newline
     prompt_hostname
@@ -112,7 +118,7 @@ prompt_hostname() {
 }
 
 
-# Operating System : #$(uname -o) (on what OS)
+# Operating System : # $(uname -o) (on what OS)
 prompt_operating_system() {
   local user=`whoami`
   if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
@@ -120,7 +126,7 @@ prompt_operating_system() {
   fi
 }
 
-# Machine Architect : #$(uname -m) (machine hardware)
+# Machine Architect : # $(uname -m) (machine hardware)
 prompt_machine_architect() {
   local user=`whoami`
   if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
@@ -128,11 +134,38 @@ prompt_machine_architect() {
   fi
 }
 
-# Kernel Release : #$(uname -r) (kernel release)
+# Microcode : # $(cat /proc/cpuinfo | grep microcode | uniq | rev | cut -d ':' -f1 | rev)
+prompt_microcode(){
+  local user=`whoami`
+  if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
+    local MICROCODE=`cat /proc/cpuinfo | grep microcode | uniq | rev | cut -d ':' -f1 | rev`
+    prompt_segment "#8ca" $PRIMARY_FG " %(!.%{%F{yellow}%}.) # $MICROCODE"
+  fi
+}
+
+# Cpu Bugs : # $(cat /proc/cpuinfo | grep bugs | uniq | rev | cut -d ':' -f1 | rev)
+prompt_cpu_bugs(){
+  local user=`whoami`
+  if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
+    local CPU_BUGS=`cat /proc/cpuinfo | grep bugs | uniq | rev | cut -d ':' -f1 | rev`
+    prompt_segment "#a7b" $PRIMARY_FG " %(!.%{%F{yellow}%}.) ! $CPU_BUGS"
+  fi
+}
+
+# Cpu Base Clock : # $(cat /proc/cpuinfo | grep name | uniq | rev | cut -d ':' -f1 | cut -d '@' -f1 | rev)
+prompt_cpu_base_clock(){
+  local user=`whoami`
+  if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
+    local CPU_BASE_CLOCK=`cat /proc/cpuinfo | grep name | uniq | rev | cut -d ':' -f1 | cut -d '@' -f1 | rev`
+    prompt_segment "#bb7" $PRIMARY_FG " %(!.%{%F{yellow}%}.) * $CPU_BASE_CLOCK"
+  fi
+}
+
+# Kernel Release : # $(uname -r) (kernel release)
 prompt_kernel_release() {
   local user=`whoami`
   if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
-    prompt_segment "#afb" $PRIMARY_FG " %(!.%{%F{yellow}%}.) # $(uname -r)"
+    prompt_segment "#b4f" $PRIMARY_FG " %(!.%{%F{yellow}%}.) # $(uname -r)"
   fi
 }
 
